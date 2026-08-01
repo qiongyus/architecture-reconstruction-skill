@@ -1,0 +1,167 @@
+# AD 清单：机器可核对的骨架，由 scripts/check_coverage.py 校验并生成追溯矩阵。
+#
+# 为什么要这份文件：42010 要求「每个 concern 至少被一个 viewpoint 框定」和
+# 「concern↔stakeholder 追溯矩阵」——这两项手工维护必然与正文脱节。
+# 把结构化事实集中在此，矩阵由脚本生成，正文只写论述。
+#
+# 用法:
+#   python3 scripts/check_coverage.py <ad-dir> --emit-matrix
+
+ad:
+  name: "<系统名> 架构描述"
+  entity_of_interest: "<被描述的实体：某仓库 / 某服务 / 某产品线>"
+  commit: "<branch> <短 sha>"
+  commit_date: "YYYY-MM-DD"
+  analysis_date: "YYYY-MM-DD"
+  # 本 AD 为何而作——决定了该恢复哪些视图，必填
+  purpose: "<例：为长期维护该 fork 提供结构与决策基线>"
+  tier: standard          # quicklook | standard | full
+  viewpoint_catalog: rozanski-woods   # rozanski-woods | 4+1 | c4 | views-and-beyond
+
+# ─── 干系人（6.2）───────────────────────────────────────────────
+# 逆向场景下全部为反推：代码里只能看到「角色的痕迹」。
+# categories 取自 42010 官方模板「适用时必须识别」的八类。
+stakeholders:
+  - id: end-users
+    name: "<最终用户：API/CLI/UI 使用者>"
+    categories: [users]
+    confidence: medium
+    evidence: "<路由表或命令定义的位置>"
+  - id: operators
+    name: "<运维者>"
+    categories: [operators]
+    confidence: medium
+    evidence: "<运维端点 / 指标 / 配置项位置>"
+  - id: maintainers
+    name: "<上游维护者>"
+    categories: [owners, maintainers, acquirers]
+    confidence: low
+    evidence: "CODEOWNERS / GOVERNANCE / git shortlog"
+  - id: contributors
+    name: "<贡献者>"
+    categories: [developers, builders]
+    confidence: high
+    evidence: "CONTRIBUTING.md / CI 配置"
+  - id: upstream-deps
+    name: "<上游依赖提供方>"
+    categories: [suppliers]
+    confidence: high
+    evidence: "<依赖清单位置>"
+
+# 八类中确实不适用的，在此声明理由（不声明则视为遗漏）
+stakeholder_categories_na: {}
+  # 例：
+  # acquirers: "开源项目无采购方；治理约束已并入 maintainers"
+
+# ─── 关注点（6.4）───────────────────────────────────────────────
+# categories 取自官方模板「必须考虑」的五类：
+#   purpose / suitability / feasibility / risks / evolution
+# confidence: fact 需附 evidence；gap 表示已知但无法从代码判定。
+concerns:
+  - id: C1
+    statement: "<系统的目的：它为谁解决什么问题>"
+    categories: [purpose]
+    stakeholders: [end-users, maintainers]
+    aspects: [functional]
+    confidence: medium
+    evidence: "README / 端点清单"
+  - id: C2
+    statement: "<架构能否达成该目的>"
+    categories: [suitability]
+    stakeholders: [maintainers, end-users]
+    aspects: [structural]
+    confidence: low
+  - id: C3
+    statement: "<构建与部署的可行性：依赖、构建链、部署形态>"
+    categories: [feasibility]
+    stakeholders: [contributors, operators, upstream-deps]
+    aspects: [structural]
+    confidence: high
+    evidence: "<构建文件与部署工件位置>"
+  - id: C4
+    statement: "<全生命周期风险：数据丢失、故障域、升级中断>"
+    categories: [risks]
+    stakeholders: [operators, end-users]
+    aspects: [behavioural, informational]
+    confidence: medium
+  - id: C5
+    statement: "<如何维护与演进：扩展点、版本兼容、技术债>"
+    categories: [evolution]
+    stakeholders: [maintainers, contributors]
+    aspects: [structural]
+    confidence: medium
+
+concern_categories_na: {}
+
+# ─── 干系人视角（6.3）：给 concern 分组，从而组织视角 ─────────────
+perspectives:
+  - id: p-operate
+    name: "运维者视角"
+    concerns: [C3, C4]
+  - id: p-contribute
+    name: "贡献者视角"
+    concerns: [C2, C3, C5]
+  - id: p-consume
+    name: "使用者视角"
+    concerns: [C1, C4]
+
+# ─── 方面（6.5）：细化 concern↔view 的追溯 ──────────────────────
+aspects:
+  - id: functional
+    name: "功能面"
+  - id: structural
+    name: "结构面"
+  - id: behavioural
+    name: "行为面"
+  - id: informational
+    name: "信息面"
+
+# ─── 视角（6.6）：每个都必须有 rationale ────────────────────────
+# frames 列出该视角框定的 concern。脚本会核对无遗漏。
+viewpoints:
+  - id: vp-context
+    name: "Context"
+    frames: [C1, C3]
+    rationale: "<为什么需要这个视角：定边界、识别外部实体>"
+  - id: vp-functional
+    name: "Functional"
+    frames: [C1, C2, C5]
+    rationale: "<…>"
+  - id: vp-information
+    name: "Information"
+    frames: [C4]
+    rationale: "<…>"
+  - id: vp-development
+    name: "Development"
+    frames: [C3, C5]
+    rationale: "<…>"
+  - id: vp-deployment
+    name: "Deployment"
+    frames: [C3, C4]
+    rationale: "<…>"
+  # 不适用的视角不要硬凑；删掉并在 AD-02 说明理由即可。
+  # - id: vp-concurrency  → 单线程系统不需要
+  # - id: vp-operational  → 库项目无运维面
+
+# ─── 视图（6.7）─────────────────────────────────────────────────
+views:
+  - id: v-context
+    name: "上下文视图"
+    viewpoint: vp-context
+    file: AD-10-view-context.md
+  - id: v-functional
+    name: "功能视图"
+    viewpoint: vp-functional
+    file: AD-11-view-functional.md
+  - id: v-information
+    name: "信息视图"
+    viewpoint: vp-information
+    file: AD-12-view-information.md
+  - id: v-development
+    name: "开发视图"
+    viewpoint: vp-development
+    file: AD-13-view-development.md
+  - id: v-deployment
+    name: "部署视图"
+    viewpoint: vp-deployment
+    file: AD-14-view-deployment.md
