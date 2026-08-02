@@ -105,6 +105,8 @@ description: 从源代码重建既有系统的架构描述（Architecture Descri
 | **标准** | 源文件约 150–1500 | `AD-00-overview.md` / `AD-01-stakeholders-concerns.md` / `AD-02-viewpoints.md` / 每视图一文件 / `AD-90-correspondences.md` / `AD-91-decisions.md` / `AD-99-gaps.md` |
 | **完整** | 源文件 > 约 1500，或多仓库/多语言 | 标准档 + 机器可读证据库（依赖图、端点清单、schema 导出）+ 一致性检查规则 |
 
+**落盘目录（约定）**：所有产出统一写入当前工作仓库的 `docs/reconstruction/architecture/`——速览档的 `ARCHITECTURE.md` 也在此，不放仓库根；用户显式指定了其他位置则从之。三个重建 skill 共用 `docs/reconstruction/` 作为约定根，各占一个子目录：本 skill 用 `architecture/`，`usecase-reconstruction` 用 `use-cases/`，`requirements-reconstruction` 用 `requirements/`。若本次重建对象是仓库内的子项目/子目录（monorepo 成员、用户指定的子范围），在约定根后插一级目标标识：`docs/reconstruction/<target-slug>/architecture/`，`<target-slug>` 取目标相对仓库根的路径、`/` 换成 `-`（如 `packages/core` → `packages-core`）；整仓重建不加这一级。
+
 在 `AD-00`（或速览档的文档头）**一次性声明**本次的档位、视角目录选择、以及 6.2/6.3/6.10 的缺口——声明一次全文生效，不要逐节重复偏离说明。
 
 骨架模板在 `assets/ad-skeleton/`，直接复制填写。
