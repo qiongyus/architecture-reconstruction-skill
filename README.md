@@ -98,8 +98,4 @@ v0.1.0 已做**两轮端到端评测**，3 个评测场景，每场景 with/with
 | 2 | VictoriaTraces / fork 后长期维护 | 10/10 | 3/9 |
 | 2 | o2 / 贡献代码（无架构文档） | 10/10 | 1/9 |
 
-基线（无 skill）的稳定失败模式正是本 skill 的纪律来源：断言无 `file:line` 出处、编造设计动机、十条目缺项无声明、最危险发现被埋进条款结构。评测资产（3 场景 + `grade.py`）在开发仓 cc-book 的 `skills/_evals/architecture-reconstruction/`。
-
-## 开发
-
-开发于 cc-book 仓库 `skills/architecture-reconstruction/`（独立 git 仓库），发布即 rsync 到 `~/.agents/skills/`。可行性研究、设计文档与实施计划在 cc-book 的 `docs/brainstorms/`、`docs/plans/`（cc-book 开发仓内）。
+基线（无 skill）的稳定失败模式正是本 skill 的纪律来源：断言无 `file:line` 出处、编造设计动机、十条目缺项无声明、最危险发现被埋进条款结构。
