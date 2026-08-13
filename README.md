@@ -86,16 +86,3 @@ ln -s ../../.agents/skills/architecture-reconstruction ~/.claude/skills/architec
 ```
 
 依赖：`bash` + `grep`/`find`（清点脚本）、`python3`（覆盖核对脚本，仅用标准库）。
-
-## 验证状态
-
-v0.1.0 已做**两轮端到端评测**，3 个评测场景，每场景 with/without skill 对照运行、按 9–10 条预置期望逐条评分：
-
-| 轮 | 场景 | with_skill | without_skill |
-|---|---|---|---|
-| 1 | VictoriaTraces / fork 后长期维护 | 10/10 | 3/9 |
-| 1 | es-proxy / 评估能否集成（速览、无历史） | 10/10 | 3/9 |
-| 2 | VictoriaTraces / fork 后长期维护 | 10/10 | 3/9 |
-| 2 | o2 / 贡献代码（无架构文档） | 10/10 | 1/9 |
-
-基线（无 skill）的稳定失败模式正是本 skill 的纪律来源：断言无 `file:line` 出处、编造设计动机、十条目缺项无声明、最危险发现被埋进条款结构。
