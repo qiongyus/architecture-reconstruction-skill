@@ -268,4 +268,4 @@ python3 scripts/check_coverage.py <ad-dir>
 - `references/evidence-discipline.md` — 证据源清单与陷阱、置信度判据、标注约定
 - `references/tooling.md` — 按语言的依赖分析与架构一致性检查工具
 
-若当前项目存在实践规范库（常见路径 `standards/03-architecture-process/`，或 CLAUDE.md 中声明的 `$STD`），一并检索并在产出中标注其条目 ID，使结论可回溯到项目自己的规范依据。不存在则静默跳过——本 skill 自身完备，不依赖它。
+若当前项目存在实践规范库（常见路径 `norms/03-architecture-process/`，或 CLAUDE.md 中声明的 `$STD`），一并检索并在产出中标注其条目 ID，使结论可回溯到项目自己的规范依据。不存在则静默跳过——本 skill 自身完备，不依赖它。
