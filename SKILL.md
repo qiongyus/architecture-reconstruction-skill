@@ -107,6 +107,8 @@ description: 从源代码重建既有系统的架构描述（Architecture Descri
 
 **落盘目录（约定）**：所有产出统一写入当前工作仓库的 `docs/reconstruction/architecture/`——速览档的 `ARCHITECTURE.md` 也在此，不放仓库根；用户显式指定了其他位置则从之。三个重建 skill 共用 `docs/reconstruction/` 作为约定根，各占一个子目录：本 skill 用 `architecture/`，`usecase-reconstruction` 用 `use-cases/`，`requirements-reconstruction` 用 `requirements/`。若本次重建对象是仓库内的子项目/子目录（monorepo 成员、用户指定的子范围），在约定根后插一级目标标识：`docs/reconstruction/<target-slug>/architecture/`，`<target-slug>` 取目标相对仓库根的路径、`/` 换成 `-`（如 `packages/core` → `packages-core`）；整仓重建不加这一级。
 
+**外层约定**：「当前工作仓库」按产出去向取值——产出允许落入被重建仓库本身时（为其贡献代码、补文档），就是该仓库；产出不进上游仓库时（重写战役、独立补 spec），工作仓库为与源克隆**同级**、统一命名 `<upstream>-spec` 的 **git 仓库**，基线源码快照以源克隆的 worktree 落同级 `<upstream>-baseline`。三个重建 skill 共用此约定，细则（含日后启动重写时的升格更名）见 `requirements-reconstruction` Step 0「工作仓库约定」。
+
 在 `AD-00`（或速览档的文档头）**一次性声明**本次的档位、视角目录选择、以及 6.2/6.3/6.10 的缺口——声明一次全文生效，不要逐节重复偏离说明。
 
 骨架模板在 `assets/ad-skeleton/`，直接复制填写。
